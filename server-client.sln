@@ -5,7 +5,7 @@ VisualStudioVersion = 17.1.32414.318
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "client", "client\client.vcxproj", "{5933DE09-D4ED-4403-9162-0C5B097A8AD5}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ConsoleApp8", "ConsoleApp8\ConsoleApp8.csproj", "{4A9D35EF-FA73-4186-9D73-88AA3614901A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "sharpClient", "ConsoleApp8\sharpClient.csproj", "{4A9D35EF-FA73-4186-9D73-88AA3614901A}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "server", "server\server.vcxproj", "{5B3A0E4D-C30B-4F9A-9E69-7F977941E90A}"
 EndProject
