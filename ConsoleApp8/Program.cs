@@ -6,14 +6,7 @@ public class GetSocket
 {
     private static Socket ConnectSocket(string server, int port)
     {
-        Socket s = null;
-        IPHostEntry hostEntry = null;
-
-        // Get host related information.
-
-        // Loop through the AddressList to obtain the supported AddressFamily. This is to avoid
-        // an exception that occurs when the host IP Address is not compatible with the address family
-        // (typical in the IPv6 case).
+        
         IPAddress address = IPAddress.Parse("127.0.0.1");
 
         IPEndPoint ipe = new IPEndPoint(address, 1111);
@@ -21,47 +14,54 @@ public class GetSocket
             new Socket(ipe.AddressFamily, SocketType.Stream, ProtocolType.Tcp);
 
         tempSocket.Connect(ipe);
-        s = tempSocket;
-        return s;
+        return tempSocket;
+    }
+    private static void SendMessage( Socket socket)
+    {
+        string message;
+        while (true)
+        {
+            message = Console.ReadLine();
+            Byte[] sendMessage= Encoding.UTF8.GetBytes(message + '\0');
+            socket.Send(sendMessage,sendMessage.Length,0);
+            
+        }
     }
 
     // This method requests the home page content for the specified server.
     public static string SocketSendReceive(string server, int port)
     {
-        string request = "GET / HTTP/1.1\r\nHost: " + server +
-            "\r\nConnection: Close\r\n\r\n";
-        Byte[] bytesSent = Encoding.ASCII.GetBytes(request);
+        Byte[] bytesSent = new Byte[256];
         Byte[] bytesReceived = new Byte[256];
-        string page = "";
+        
+        string message = "";
         int index;
         // Create a socket connection with the specified server and port.
-        using (Socket s = ConnectSocket(server, port))
+        using (Socket socket = ConnectSocket(server, port))
         {
 
-            if (s == null)
+            if (socket == null)
                 return ("Connection failed");
 
-            // Send request to the server.
-            //s.Send(bytesSent, bytesSent.Length, 0);
-            // Receive the server home page content.
-            int bytes = 0;
-            // The following will block until the page is transmitted.
-            //00000000000
+            Task.Run(() =>SendMessage(socket));
+          
+            int bytes;
+            
             while (true)
             {
-                bytes = s.Receive(bytesReceived, bytesReceived.Length, 0);
+                bytes = socket.Receive(bytesReceived, bytesReceived.Length, 0);
 
                 index = Array.IndexOf(bytesReceived, (Byte)0);
                 if (index == -1)
-                    page = System.Text.Encoding.ASCII.GetString(bytesReceived, 0, bytes);
+                    message = System.Text.Encoding.UTF8.GetString(bytesReceived, 0, bytes);
                 else
-                    page = System.Text.Encoding.ASCII.GetString(bytesReceived, 0, index);
+                    message = System.Text.Encoding.UTF8.GetString(bytesReceived, 0, index);
 
-                if (page == "exit")
-                    return page;
-                Console.WriteLine(page);
+                if (message == "exit")
+                    return message;
+                Console.WriteLine(message);
             }
-
+            
         }
 
     }
@@ -71,8 +71,8 @@ class Program
     public static void Main()
     {
 
-       Task.Run(()=> GetSocket.SocketSendReceive("127.0.0.1", 1111));
-        Connect();
+        GetSocket.SocketSendReceive("127.0.0.1", 1111);
+        Console.WriteLine("\n Press Enter to continue...");
         Console.Read();
     }
 
