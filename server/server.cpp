@@ -1,6 +1,7 @@
 ﻿#include <stdio.h>
 #include <winsock2.h>
 #include <iostream>
+#include <thread>
 #pragma comment(lib, "ws2_32.lib")
 
 #pragma warning(disable: 4996)
@@ -9,7 +10,7 @@ const int size = 100;
 SOCKET Connections[size];
 int indexCounter = 0;
 
-void ClientHandler(int index) {
+void ClientHandler(int index,std::string ip) {
 
 	int msg_size;
 	while (true) {
@@ -29,7 +30,7 @@ void ClientHandler(int index) {
 		else {
 			::closesocket(Connections[index]);
 			Connections[index] = INVALID_SOCKET;
-			std::cout << "Client disconnected!\n";
+			std::cout << "Client disconnected:"<<ip<<std::endl;
 			return;
 		}
 	}
@@ -59,15 +60,16 @@ int main()
 
 	SOCKET	newConnection;
 
+	std::thread threads[size];
 	for (size_t i = 0; i < size; i++)
 	{
 		newConnection = accept(serverListener, (SOCKADDR*)&address, &sizeOfAddress); //Сокет для удержания соединения с клиентом
 		if (newConnection == 0) //Проверка соединения
 		{
-			std::cout << "Error, no connection\n";
+			std::cout << "Error, no connection " << inet_ntoa(address.sin_addr) << std::endl;
 		}
 		else {
-			std::cout << "Client connected " << inet_ntoa(address.sin_addr) << std::endl;
+			std::cout << "Client connected:" << inet_ntoa(address.sin_addr) << std::endl;
 			std::string message = "You can send any messages!";
 			int msg_size=message.size();
 			send(newConnection, (char*)&msg_size, sizeof(int), NULL);
@@ -75,7 +77,9 @@ int main()
 
 			Connections[i] = newConnection;
 			indexCounter++;
-			CreateThread(NULL, NULL, (LPTHREAD_START_ROUTINE)ClientHandler, (LPVOID)(i), NULL, NULL);
+			//CreateThread(NULL, NULL, (LPTHREAD_START_ROUTINE)ClientHandler,
+				//(LPVOID)(i, inet_ntoa(address.sin_addr)), NULL, NULL);
+			threads[i] = std::thread(ClientHandler, i, inet_ntoa(address.sin_addr));
 		}
 	}
 	system("pause");
