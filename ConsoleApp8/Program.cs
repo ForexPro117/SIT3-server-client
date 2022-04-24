@@ -51,7 +51,6 @@ public class GetSocket
                 bytesReceived = new Byte[4];
                 socket.Receive(bytesReceived,sizeof(int), 0);
                messageLength = BitConverter.ToInt32(bytesReceived);
-              // messageLength = Int32.Parse(Encoding.ASCII.GetString(bytesReceived, 0, 4));
                bytesReceived =new Byte[messageLength];
                 socket.Receive(bytesReceived, messageLength, 0);
 
