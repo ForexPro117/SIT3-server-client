@@ -28,33 +28,69 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.button1 = new System.Windows.Forms.Button();
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form1));
+            this.sendButton = new System.Windows.Forms.Button();
+            this.TextBox = new System.Windows.Forms.RichTextBox();
+            this.messageBox = new System.Windows.Forms.TextBox();
             this.SuspendLayout();
             // 
-            // button1
+            // sendButton
             // 
-            this.button1.Location = new System.Drawing.Point(694, 405);
-            this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(75, 23);
-            this.button1.TabIndex = 0;
-            this.button1.Text = "button1";
-            this.button1.UseVisualStyleBackColor = true;
+            this.sendButton.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.sendButton.Location = new System.Drawing.Point(397, 403);
+            this.sendButton.Name = "sendButton";
+            this.sendButton.Size = new System.Drawing.Size(75, 46);
+            this.sendButton.TabIndex = 0;
+            this.sendButton.Text = "Отправить";
+            this.sendButton.UseVisualStyleBackColor = true;
+            this.sendButton.Click += new System.EventHandler(this.sendMessage_Click);
+            // 
+            // TextBox
+            // 
+            this.TextBox.Font = new System.Drawing.Font("Arial", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.TextBox.Location = new System.Drawing.Point(12, 12);
+            this.TextBox.Name = "TextBox";
+            this.TextBox.RightToLeft = System.Windows.Forms.RightToLeft.No;
+            this.TextBox.Size = new System.Drawing.Size(460, 375);
+            this.TextBox.TabIndex = 1;
+            this.TextBox.Text = "";
+            // 
+            // messageBox
+            // 
+            this.messageBox.BackColor = System.Drawing.SystemColors.Window;
+            this.messageBox.Font = new System.Drawing.Font("Arial", 10F);
+            this.messageBox.Location = new System.Drawing.Point(12, 403);
+            this.messageBox.Multiline = true;
+            this.messageBox.Name = "messageBox";
+            this.messageBox.ScrollBars = System.Windows.Forms.ScrollBars.Both;
+            this.messageBox.Size = new System.Drawing.Size(365, 46);
+            this.messageBox.TabIndex = 2;
             // 
             // Form1
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(800, 450);
-            this.Controls.Add(this.button1);
+            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
+            this.BackColor = System.Drawing.SystemColors.ControlLightLight;
+            this.ClientSize = new System.Drawing.Size(484, 461);
+            this.Controls.Add(this.messageBox);
+            this.Controls.Add(this.TextBox);
+            this.Controls.Add(this.sendButton);
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
+            this.MaximumSize = new System.Drawing.Size(500, 500);
+            this.MinimumSize = new System.Drawing.Size(500, 500);
             this.Name = "Form1";
-            this.Text = "Form1";
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
+            this.Text = "DISCORD 2.0";
+            this.Load += new System.EventHandler(this.Form1_Load);
             this.ResumeLayout(false);
+            this.PerformLayout();
 
         }
 
         #endregion
 
-        private System.Windows.Forms.Button button1;
+        private System.Windows.Forms.Button sendButton;
+        private System.Windows.Forms.RichTextBox TextBox;
+        private System.Windows.Forms.TextBox messageBox;
     }
 }
 
