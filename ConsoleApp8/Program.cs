@@ -6,7 +6,7 @@ public class GetSocket
 {
     private static Socket ConnectSocket(string server, int port)
     {
-        
+
         IPAddress address = IPAddress.Parse("127.0.0.1");
 
         IPEndPoint ipe = new IPEndPoint(address, 1111);
@@ -16,26 +16,23 @@ public class GetSocket
         tempSocket.Connect(ipe);
         return tempSocket;
     }
-    private static void SendMessage( Socket socket)
+    private static void SendMessage(Socket socket)
     {
+        Byte[] bytesSend;
         string message;
         while (true)
         {
             message = Console.ReadLine();
-            Byte[] sendMessage= Encoding.UTF8.GetBytes(message + '\0');
-            socket.Send(sendMessage,sendMessage.Length,0);
-            
+            bytesSend = Encoding.UTF8.GetBytes(message + '\0');
+            socket.Send(BitConverter.GetBytes(bytesSend.Length), sizeof(int), 0);
+            socket.Send(bytesSend, bytesSend.Length, 0);
+
         }
     }
 
     // This method requests the home page content for the specified server.
     public static string SocketSendReceive(string server, int port)
     {
-        Byte[] bytesSent = new Byte[256];
-        Byte[] bytesReceived = new Byte[256];
-        
-        string message = "";
-        int index;
         // Create a socket connection with the specified server and port.
         using (Socket socket = ConnectSocket(server, port))
         {
@@ -43,25 +40,29 @@ public class GetSocket
             if (socket == null)
                 return ("Connection failed");
 
-            Task.Run(() =>SendMessage(socket));
-          
-            int bytes;
-            
+            Task.Run(() => SendMessage(socket));
+
+            Byte[] bytesReceived;
+            string message = "";
+            int messageLength;
+
             while (true)
             {
-                bytes = socket.Receive(bytesReceived, bytesReceived.Length, 0);
+                bytesReceived = new Byte[4];
+                socket.Receive(bytesReceived,sizeof(int), 0);
+               messageLength = BitConverter.ToInt32(bytesReceived);
+              // messageLength = Int32.Parse(Encoding.ASCII.GetString(bytesReceived, 0, 4));
+               bytesReceived =new Byte[messageLength];
+                socket.Receive(bytesReceived, messageLength, 0);
 
-                index = Array.IndexOf(bytesReceived, (Byte)0);
-                if (index == -1)
-                    message = System.Text.Encoding.UTF8.GetString(bytesReceived, 0, bytes);
-                else
-                    message = System.Text.Encoding.UTF8.GetString(bytesReceived, 0, index);
+                
+                message = Encoding.UTF8.GetString(bytesReceived, 0, messageLength);
 
                 if (message == "exit")
                     return message;
                 Console.WriteLine(message);
             }
-            
+
         }
 
     }
@@ -117,9 +118,9 @@ class Program
             {
                 Int32 bytes = stream.Read(data, 0, data.Length);
 
-               index= Array.IndexOf(data, (Byte)0);
+                index = Array.IndexOf(data, (Byte)0);
                 if (index == -1)
-                responseData = System.Text.Encoding.ASCII.GetString(data, 0, bytes);
+                    responseData = System.Text.Encoding.ASCII.GetString(data, 0, bytes);
                 else
                     responseData = System.Text.Encoding.ASCII.GetString(data, 0, index);
 

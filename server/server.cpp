@@ -10,15 +10,21 @@ SOCKET Connections[size];
 int indexCounter = 0;
 
 void ClientHandler(int index) {
-	char message[256];
+
+	int msg_size;
 	while (true) {
-		if (recv(Connections[index], message, sizeof(message), NULL) > 0) {
+		if (recv(Connections[index], (char*)&msg_size, sizeof(int), NULL) > 0) {
+			char* msg = new char[msg_size + 1];
+			msg[msg_size] = '\0';
+			recv(Connections[index], msg, msg_size, NULL);
 			for (int i = 0; i < indexCounter; i++) {
 				if (i == index || Connections[i] == INVALID_SOCKET) {
 					continue;
 				}
-				send(Connections[i], message, sizeof(message), NULL);
+				send(Connections[i], (char*)&msg_size, sizeof(int), NULL);
+				send(Connections[i], msg, msg_size, NULL);
 			}
+			delete[] msg;
 		}
 		else {
 			::closesocket(Connections[index]);
@@ -52,6 +58,7 @@ int main()
 	listen(serverListener, SOMAXCONN); //Ожидание соединения с клиентом
 
 	SOCKET	newConnection;
+
 	for (size_t i = 0; i < size; i++)
 	{
 		newConnection = accept(serverListener, (SOCKADDR*)&address, &sizeOfAddress); //Сокет для удержания соединения с клиентом
@@ -61,8 +68,10 @@ int main()
 		}
 		else {
 			std::cout << "Client connected " << inet_ntoa(address.sin_addr) << std::endl;
-			char message[256] = "You can send any messages!";
-			send(newConnection, message, sizeof(message), NULL); //Отправка сообщения клиентам
+			std::string message = "You can send any messages!";
+			int msg_size=message.size();
+			send(newConnection, (char*)&msg_size, sizeof(int), NULL);
+			send(newConnection, message.c_str(), message.size(), NULL); //Отправка сообщения клиентам
 
 			Connections[i] = newConnection;
 			indexCounter++;
