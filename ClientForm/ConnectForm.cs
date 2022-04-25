@@ -15,7 +15,8 @@ namespace ClientForm
         public ConnectForm()
         {
             InitializeComponent();
-
+            Random rd=new Random();
+           nicname.Text += rd.Next(1, 999);
         }
         private static Socket ConnectSocket(string ip, int port)
         {
