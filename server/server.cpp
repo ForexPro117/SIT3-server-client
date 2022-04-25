@@ -10,7 +10,7 @@ const int size = 100;
 SOCKET Connections[size];
 int indexCounter = 0;
 
-void ClientHandler(int index,std::string ip) {
+void ClientHandler(int index, std::string ip) {
 
 	int msg_size;
 	while (true) {
@@ -30,7 +30,7 @@ void ClientHandler(int index,std::string ip) {
 		else {
 			::closesocket(Connections[index]);
 			Connections[index] = INVALID_SOCKET;
-			std::cout << "Client disconnected:"<<ip<<std::endl;
+			std::cout << "Client disconnected:" << ip << std::endl;
 			return;
 		}
 	}
@@ -48,14 +48,20 @@ int main()
 
 	SOCKADDR_IN address; //Структура для хранения адресов интернет протоколов
 	int sizeOfAddress = sizeof(address);
-	address.sin_addr.s_addr = inet_addr("127.0.0.1"); //ip фдрес, указан localhost
+	//добавить ввод ip
+	std::cout << "Enter ip address:";
+	char ip[20];
+	std::cin >> ip;
+	if (strchr(ip,'.') == 0)
+		strcpy(ip, "127.0.0.1");
+	address.sin_addr.s_addr = inet_addr(ip); //ip фдрес, указан localhost
 	address.sin_port = htons(1111); //Порт для идентификации программы
 	address.sin_family = AF_INET; //Семейство интернет протоколов
 
 	SOCKET serverListener = socket(AF_INET, SOCK_STREAM, NULL); //Сокет для прослушивания входящих соединений
 
 	bind(serverListener, (SOCKADDR*)&address, sizeof(address)); //Привязка сокету адреса
-
+	std::cout << "Server started:" << inet_ntoa(address.sin_addr) << std::endl;
 	listen(serverListener, SOMAXCONN); //Ожидание соединения с клиентом
 
 	SOCKET	newConnection;
@@ -66,12 +72,12 @@ int main()
 		newConnection = accept(serverListener, (SOCKADDR*)&address, &sizeOfAddress); //Сокет для удержания соединения с клиентом
 		if (newConnection == 0) //Проверка соединения
 		{
-			std::cout << "Error, no connection " << inet_ntoa(address.sin_addr) << std::endl;
+			std::cout << "Error, no connection:" << inet_ntoa(address.sin_addr) << std::endl;
 		}
 		else {
 			std::cout << "Client connected:" << inet_ntoa(address.sin_addr) << std::endl;
 			std::string message = "You can send any messages!";
-			int msg_size=message.size();
+			int msg_size = message.size();
 			send(newConnection, (char*)&msg_size, sizeof(int), NULL);
 			send(newConnection, message.c_str(), message.size(), NULL); //Отправка сообщения клиентам
 
