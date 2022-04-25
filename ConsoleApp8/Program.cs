@@ -75,30 +75,4 @@ class Program
         Console.WriteLine("\n Press Enter to continue...");
         Console.Read();
     }
-
-
-
-
-    static void Connect()
-    {
-        try
-        {
-
-        }
-        catch (ArgumentNullException e)
-        {
-            Console.WriteLine("ArgumentNullException: {0}", e);
-        }
-        catch (SocketException e)
-        {
-            Console.WriteLine("Установленно соединение с сервером");
-        }
-        catch (IOException e)
-        {
-            Console.WriteLine("Сервер прекратил свою работу!");
-        }
-
-        Console.WriteLine("\n Press Enter to continue...");
-        Console.Read();
-    }
 }

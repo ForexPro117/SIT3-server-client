@@ -48,7 +48,6 @@ int main()
 
 	SOCKADDR_IN address; //Структура для хранения адресов интернет протоколов
 	int sizeOfAddress = sizeof(address);
-	//добавить ввод ip
 	std::cout << "Enter ip address:";
 	char ip[20];
 	std::cin >> ip;
@@ -76,15 +75,13 @@ int main()
 		}
 		else {
 			std::cout << "Client connected:" << inet_ntoa(address.sin_addr) << std::endl;
-			std::string message = "You can send any messages!";
-			int msg_size = message.size();
-			send(newConnection, (char*)&msg_size, sizeof(int), NULL);
-			send(newConnection, message.c_str(), message.size(), NULL); //Отправка сообщения клиентам
+			//std::string message = "You can send any messages!";
+			//int msg_size = message.size();
+			//send(newConnection, (char*)&msg_size, sizeof(int), NULL);
+			//send(newConnection, message.c_str(), message.size(), NULL); //Отправка сообщения клиентам
 
 			Connections[i] = newConnection;
 			indexCounter++;
-			//CreateThread(NULL, NULL, (LPTHREAD_START_ROUTINE)ClientHandler,
-				//(LPVOID)(i, inet_ntoa(address.sin_addr)), NULL, NULL);
 			threads[i] = std::thread(ClientHandler, i, inet_ntoa(address.sin_addr));
 		}
 	}

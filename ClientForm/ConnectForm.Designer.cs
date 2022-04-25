@@ -42,7 +42,7 @@
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(19, 42);
+            this.label1.Location = new System.Drawing.Point(13, 42);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(56, 13);
             this.label1.TabIndex = 0;
@@ -50,7 +50,7 @@
             // 
             // nicname
             // 
-            this.nicname.Location = new System.Drawing.Point(81, 39);
+            this.nicname.Location = new System.Drawing.Point(75, 39);
             this.nicname.MaxLength = 15;
             this.nicname.Name = "nicname";
             this.nicname.Size = new System.Drawing.Size(134, 20);
@@ -69,7 +69,7 @@
             // 
             // IPBox
             // 
-            this.IPBox.Location = new System.Drawing.Point(81, 89);
+            this.IPBox.Location = new System.Drawing.Point(75, 89);
             this.IPBox.MaxLength = 15;
             this.IPBox.Name = "IPBox";
             this.IPBox.Size = new System.Drawing.Size(134, 20);
@@ -79,15 +79,14 @@
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(221, 42);
+            this.label2.Location = new System.Drawing.Point(215, 42);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(81, 13);
+            this.label2.Size = new System.Drawing.Size(0, 13);
             this.label2.TabIndex = 3;
-            this.label2.Text = "Статус: Успех!";
             // 
             // PortBox
             // 
-            this.PortBox.Location = new System.Drawing.Point(258, 89);
+            this.PortBox.Location = new System.Drawing.Point(252, 89);
             this.PortBox.MaxLength = 5;
             this.PortBox.Name = "PortBox";
             this.PortBox.Size = new System.Drawing.Size(47, 20);
@@ -97,7 +96,7 @@
             // label3
             // 
             this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(221, 92);
+            this.label3.Location = new System.Drawing.Point(215, 92);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(35, 13);
             this.label3.TabIndex = 5;
@@ -106,7 +105,7 @@
             // label4
             // 
             this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(40, 92);
+            this.label4.Location = new System.Drawing.Point(34, 92);
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(20, 13);
             this.label4.TabIndex = 7;
