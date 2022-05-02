@@ -74,13 +74,23 @@ namespace ClientForm
                 {
                     TextBox.Text += $"\n{null,-40}Ошибка соединения!";
                     sendButton.Enabled = false;
-                    messageBox.Enabled=false;
+                    messageBox.Enabled = false;
                     break;
                 }
                 TextBox.Text += message;
-                
+
             }
 
+        }
+
+        private void messageBox_KeyDown(object sender, KeyEventArgs e)
+        {
+
+            if (e.KeyCode == Keys.Enter && e.Modifiers == Keys.None)
+            {
+                e.SuppressKeyPress = true;
+                sendMessage_Click(sender, e);
+            }
         }
 
 

@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Net;
 using System.Net.Sockets;
+using System.Threading;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace ClientForm
@@ -15,35 +17,46 @@ namespace ClientForm
         public ConnectForm()
         {
             InitializeComponent();
-            Random rd=new Random();
-           nicname.Text += rd.Next(1, 999);
+            Random rd = new Random();
+            nicname.Text += rd.Next(1, 999);
         }
         private static Socket ConnectSocket(string ip, int port)
         {
-
             IPAddress address = IPAddress.Parse(ip);
 
             IPEndPoint ipe = new IPEndPoint(address, port);
             Socket tempSocket =
                 new Socket(ipe.AddressFamily, SocketType.Stream, ProtocolType.Tcp);
-
-            tempSocket.Connect(ipe);
-            return tempSocket;
+            try
+            {
+                tempSocket.Connect(ipe);
+                return tempSocket;
+            }
+            catch (SocketException e)
+            {
+                tempSocket.Close();
+                return null;
+            }
         }
         private void checkButton_Click(object sender, EventArgs e)
         {
+            label2.Text = "Статус: Проверка";
+            checkButton.Enabled = false;
             this._ip = IPBox.Text;
-            Int32.TryParse(PortBox.Text, out this._port);
-
+            Int32.TryParse(PortBox.Text, out _port);
             try
             {
-                label2.Text = "Статус: Проверка";
-                Socket socket = ConnectSocket(_ip, _port);
+                Socket socket;
+
+                var task = Task.Run(() => ConnectSocket(_ip, _port));
+                if (task.Wait(TimeSpan.FromSeconds(5)))
+                    socket = task.Result;
+                else
+                    throw new TimeoutException();
 
                 if (socket == null)
                 {
                     label2.Text = "Статус: Ошибка соединения";
-                    socket.Close();
                     return;
                 }
                 label2.Text = "Статус: Успех";
@@ -56,12 +69,14 @@ namespace ClientForm
 
 
             }
-            catch (SocketException)
+            catch (TimeoutException)
             {
-                label2.Text = "Статус: Сервер недоступен";
-
+                label2.Text = "Статус: Timeout";
             }
-            this.Enabled = true;
+            finally
+            {
+                checkButton.Enabled = true;
+            }
 
         }
 

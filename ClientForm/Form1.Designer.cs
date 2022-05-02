@@ -66,6 +66,7 @@
             this.messageBox.ScrollBars = System.Windows.Forms.ScrollBars.Both;
             this.messageBox.Size = new System.Drawing.Size(365, 46);
             this.messageBox.TabIndex = 2;
+            this.messageBox.KeyDown += new System.Windows.Forms.KeyEventHandler(this.messageBox_KeyDown);
             // 
             // Form1
             // 
