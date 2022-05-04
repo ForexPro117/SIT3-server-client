@@ -9,23 +9,33 @@
 const int size = 100;
 SOCKET Connections[size];
 int indexCounter = 0;
+const int BUF_SIZE = 2048;
+
 
 void ClientHandler(int index, std::string ip) {
-
+	int iResult;
+	int iPlace;
 	int msg_size;
+	std::string s;
+	char recvbuf[BUF_SIZE];
 	while (true) {
 		if (recv(Connections[index], (char*)&msg_size, sizeof(int), NULL) > 0) {
-			char* msg = new char[msg_size + 1];
-			msg[msg_size] = '\0';
-			recv(Connections[index], msg, msg_size, NULL);
+			s.clear();
+			iResult = 0;
+			do {
+				iPlace = iResult;
+				iResult += recv(Connections[index], recvbuf, BUF_SIZE, 0);
+				s.insert(iPlace, recvbuf);
+
+			} while (iResult != msg_size);
+			s[iResult-1] = '\0';
+
 			for (int i = 0; i < indexCounter; i++) {
 				if (i == index || Connections[i] == INVALID_SOCKET) {
 					continue;
 				}
-				send(Connections[i], (char*)&msg_size, sizeof(int), NULL);
-				send(Connections[i], msg, msg_size, NULL);
+				send(Connections[i], s.c_str(), msg_size, NULL);
 			}
-			delete[] msg;
 		}
 		else {
 			::closesocket(Connections[index]);
@@ -35,7 +45,6 @@ void ClientHandler(int index, std::string ip) {
 		}
 	}
 }
-
 
 int main()
 {

@@ -17,7 +17,7 @@ namespace ClientForm
             InitializeComponent();
         }
 
-        internal string MessageReceive()
+        /*internal string MessageReceive()
         {
             Byte[] bytesReceived;
             int messageLength;
@@ -25,12 +25,45 @@ namespace ClientForm
 
             try
             {
+                
                 bytesReceived = new Byte[4];
                 _socket.Receive(bytesReceived, sizeof(int), 0);
                 messageLength = BitConverter.ToInt32(bytesReceived, 0);
                 bytesReceived = new Byte[messageLength];
                 _socket.Receive(bytesReceived, messageLength, 0);
                 return Encoding.UTF8.GetString(bytesReceived, 0, messageLength);
+            }
+            catch (SocketException)
+            {
+
+                return "";
+            }
+            catch (ObjectDisposedException)
+            {
+
+                return "";
+            }
+
+
+        }*/
+        internal string MessageReceive()
+        {
+
+            byte[] data = new byte[2048]; // буфер для ответа
+            StringBuilder builder = new StringBuilder();
+
+            int bytes = 0; // количество полученных байт
+
+            try
+            {
+
+                do
+                {
+                    bytes = _socket.Receive(data, data.Length, 0);
+                    builder.Append(Encoding.UTF8.GetString(data, 0, bytes));
+                }
+                while (_socket.Available > 0);
+                return builder.ToString();
             }
             catch (SocketException)
             {
@@ -56,7 +89,13 @@ namespace ClientForm
                 bytesSend = Encoding.UTF8.GetBytes(message + '\0');
                 _socket.Send(BitConverter.GetBytes(bytesSend.Length), sizeof(int), 0);
                 _socket.Send(bytesSend, bytesSend.Length, 0);
+
+                if (TextBox.Text.Length > 2000000)
+                {
+                    TextBox.Text = $"{null,-20}{DateTime.Now:t} Произошла очистка старых сообщений!\n\n";
+                }
                 TextBox.Text += $"{DateTime.Now:t} Вы: " + messageBox.Text + "\n";
+
                 messageBox.Text = null;
             }
 
@@ -77,6 +116,10 @@ namespace ClientForm
                     messageBox.Enabled = false;
                     break;
                 }
+                if (TextBox.Text.Length > 2000000)
+                {
+                    TextBox.Text = $"{null,-20}{DateTime.Now:t} Произошла очистка старых сообщений!\n\n";
+                }
                 TextBox.Text += message;
 
             }
@@ -93,6 +136,9 @@ namespace ClientForm
             }
         }
 
+        private void TextBox_TextChanged(object sender, EventArgs e)
+        {
 
+        }
     }
 }

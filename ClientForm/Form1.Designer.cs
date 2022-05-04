@@ -55,12 +55,14 @@
             this.TextBox.Size = new System.Drawing.Size(460, 375);
             this.TextBox.TabIndex = 1;
             this.TextBox.Text = "";
+            this.TextBox.TextChanged += new System.EventHandler(this.TextBox_TextChanged);
             // 
             // messageBox
             // 
             this.messageBox.BackColor = System.Drawing.SystemColors.Window;
             this.messageBox.Font = new System.Drawing.Font("Arial", 10F);
             this.messageBox.Location = new System.Drawing.Point(12, 403);
+            this.messageBox.MaxLength = 9999999;
             this.messageBox.Multiline = true;
             this.messageBox.Name = "messageBox";
             this.messageBox.ScrollBars = System.Windows.Forms.ScrollBars.Both;
