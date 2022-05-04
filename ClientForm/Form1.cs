@@ -16,36 +16,6 @@ namespace ClientForm
             _socket = socket;
             InitializeComponent();
         }
-
-        /*internal string MessageReceive()
-        {
-            Byte[] bytesReceived;
-            int messageLength;
-
-
-            try
-            {
-                
-                bytesReceived = new Byte[4];
-                _socket.Receive(bytesReceived, sizeof(int), 0);
-                messageLength = BitConverter.ToInt32(bytesReceived, 0);
-                bytesReceived = new Byte[messageLength];
-                _socket.Receive(bytesReceived, messageLength, 0);
-                return Encoding.UTF8.GetString(bytesReceived, 0, messageLength);
-            }
-            catch (SocketException)
-            {
-
-                return "";
-            }
-            catch (ObjectDisposedException)
-            {
-
-                return "";
-            }
-
-
-        }*/
         internal string MessageReceive()
         {
 
@@ -89,7 +59,8 @@ namespace ClientForm
                 bytesSend = Encoding.UTF8.GetBytes(message + '\0');
                 _socket.Send(BitConverter.GetBytes(bytesSend.Length), sizeof(int), 0);
                 _socket.Send(bytesSend, bytesSend.Length, 0);
-
+                bytesSend = null;
+                message = null;
                 if (TextBox.Text.Length > 2000000)
                 {
                     TextBox.Text = $"{null,-20}{DateTime.Now:t} Произошла очистка старых сообщений!\n\n";
@@ -136,9 +107,5 @@ namespace ClientForm
             }
         }
 
-        private void TextBox_TextChanged(object sender, EventArgs e)
-        {
-
-        }
     }
 }
